@@ -2,7 +2,6 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using static UnityEditor.Progress;
 
 public class OptionManager : MonoBehaviour
 {
@@ -26,9 +25,11 @@ public class OptionManager : MonoBehaviour
     private void RandomPick()
     {
         //Spawn the correct item in option panel randomly
+
         int index = Random.Range(0, items.Length);
 
-        Image image = items[index].GetComponent<Image>();
+        Image image;
+        image = items[index].GetComponent<Image>();
         image.sprite = scriptable_object[0].sprite;
 
         itemDataList.Add(new itemData
@@ -36,10 +37,10 @@ public class OptionManager : MonoBehaviour
             image = image.sprite,
             id = scriptable_object[0].id
         });
-        print(image.sprite);
+
         //Fill the rest with random pick item
         int i = 0;
-        while (true)
+        for (int j = 0; j < 100; j++)
         {
             if (i == items.Length)
             {
@@ -48,20 +49,15 @@ public class OptionManager : MonoBehaviour
             //Skip if item have been filled
             if (items[i].GetComponent<Image>().sprite != null)
             {
+                print("Skip");
                 i++;
                 continue;
             }
 
-            Image images = items[i].GetComponent<Image>();
-
             //Spawn random scripable object
             int randomIndex = Random.Range(0, scriptable_object.Length);
+            image = items[i].GetComponent<Image>();
             var getImage = scriptable_object[randomIndex].sprite;
-            itemDataList.Add(new itemData
-            {
-                image = getImage,
-
-            });
 
             //Data contain in list, "continue" to pick another random number
             if (itemDataList.Any(
@@ -71,7 +67,16 @@ public class OptionManager : MonoBehaviour
                 continue;
             }
 
-            images.sprite = getImage;
+            
+            image.sprite = getImage;
+            itemDataList.Add(new itemData
+            {
+                image = getImage,
+                id = scriptable_object[randomIndex].id
+            });
+            i++;
+
+
         }
     }
 }
