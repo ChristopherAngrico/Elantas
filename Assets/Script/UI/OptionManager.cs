@@ -19,13 +19,15 @@ public class OptionManager : MonoBehaviour
     private Button option3;
     private Button option4;
 
-    [HideInInspector] public bool next;
-    private bool randomize = true;
+    [HideInInspector] public bool clear;
 
     private GenerateQuestion generateQuestion;
 
-    public delegate void ChangeNextQuesiton();
-    public event ChangeNextQuesiton OnChangeNextQuesiton;
+    public delegate void Answer(bool ans);
+
+    public static event Answer OnNextQuestion;
+    public static event Answer OnResetQuestion;
+
     private struct itemData
     {
         public string text;
@@ -52,23 +54,21 @@ public class OptionManager : MonoBehaviour
             button[i].GetComponentInChildren<TextMeshProUGUI>().text = string.Empty;
         }
 
+        //Subscribe to get notify start the quiz
+        Movement.OnStartQuiz += () =>
+        {
+            RandomPick();
+        };
     }
 
 
     private void Update()
     {
-        if (next)
+        if (clear)
         {
             //Clear an option everytime reset or next question
             Clear();
-            OnChangeNextQuesiton?.Invoke();
-            next = false;
-            randomize = true;
-        }
-        if (randomize)
-        {
-            RandomPick();
-            randomize = false;
+            clear = false;
         }
     }
     private void RandomPick()
@@ -137,13 +137,13 @@ public class OptionManager : MonoBehaviour
         {
             if (data.id == generateQuestion.questionID)
             {
-                print("Benar");
-                next = true;
+                OnNextQuestion?.Invoke(true);
+                clear = true;
             }
             else
             {
-                print("Salah");
-                next = true;
+                OnResetQuestion?.Invoke(false);
+                clear = true;
             }
         }
     }

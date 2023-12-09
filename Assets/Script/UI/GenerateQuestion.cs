@@ -15,14 +15,13 @@ public class GenerateQuestion : MonoBehaviour
 
     [HideInInspector] public int questionID { get; private set; }
 
-    private OptionManager optionManager;
-
     private void OnEnable()
     {
-        optionManager = GetComponent<OptionManager>();
+
         Random.InitState(System.DateTime.Now.Millisecond);
-        RandomPick();
-        optionManager.OnChangeNextQuesiton += () =>
+
+        //Subscribe to get notify start the quiz
+        Movement.OnStartQuiz += () =>
         {
             RandomPick();
         };

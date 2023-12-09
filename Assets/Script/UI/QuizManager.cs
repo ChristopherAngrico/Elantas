@@ -1,20 +1,30 @@
-using System.Collections;
-using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class QuizManager : MonoBehaviour
 {
     public static QuizManager instance;
-    [SerializeField] private GenerateQuestion generateQuestion;
-    [SerializeField] private OptionManager optionManager;
 
-    [HideInInspector] public List<int> QuestionList = new List<int>();
+    public GameObject quiz;
 
-    [HideInInspector] public int questionID;
+    [HideInInspector] public bool correctAnswer;
+    [HideInInspector] public bool wrongAnswer;
 
-    [HideInInspector] public bool nextQuestion;
-    private void Awake()
+    public delegate void Quiz();
+    public static event Quiz OnStartQuiz;
+    private void Update()
     {
-        instance = this;
+        if (quiz.activeSelf == true)
+        {
+            print("Testing");
+            OnStartQuiz?.Invoke();
+        }
+        if (correctAnswer || wrongAnswer)
+        {
+            quiz.SetActive(false);
+
+            correctAnswer = false;
+            wrongAnswer = false;
+        }
     }
 }
