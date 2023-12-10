@@ -4,9 +4,12 @@ using UnityEngine;
 public class Movement : MonoBehaviour
 {
     Vector3 moveDirection;
+    private bool canMove = true;
+    
     public delegate void StartQuiz();
     public static event StartQuiz OnStartQuiz;
-    private bool canMove = true;
+
+
     private void OnEnable()
     {
         OptionManager.OnNextQuestion += (bool canMove) => {

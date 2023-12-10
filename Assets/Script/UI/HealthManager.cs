@@ -4,27 +4,19 @@ using System.Collections.Generic;
 
 public class HealthManager : MonoBehaviour
 {
-    [SerializeField] private float health;
+    private int health;
     [SerializeField] private List<Image> image;
     [SerializeField] private Sprite fullHeart;
     [SerializeField] private Sprite emptyHeart;
-
-    private void Update()
+    private void OnEnable()
     {
-        if(health > image.Count)
+        health = image.Count - 1;
+        OptionManager.OnResetQuestion += (bool ans) =>
         {
-            health = image.Count;
-        }
-        for (int i = 0; i < image.Count; i++)
-        {
-            if(i < health)
-            {
-                image[i].sprite = fullHeart;
-            }
-            else
-            {
-                image[i].sprite = emptyHeart;
-            }
-        }
+            if (health < 0) return;
+
+            image[health].sprite = emptyHeart;
+            health -= 1;
+        };
     }
 }

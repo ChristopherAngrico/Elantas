@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using TMPro;
-
+using System.Reflection;
 
 public class OptionManager : MonoBehaviour
 {
@@ -24,9 +24,11 @@ public class OptionManager : MonoBehaviour
     private GenerateQuestion generateQuestion;
 
     public delegate void Answer(bool ans);
+    public delegate void EndQuiz();
 
     public static event Answer OnNextQuestion;
     public static event Answer OnResetQuestion;
+    public static event EndQuiz OnEndQuiz;
 
     private struct itemData
     {
@@ -54,6 +56,10 @@ public class OptionManager : MonoBehaviour
             button[i].GetComponentInChildren<TextMeshProUGUI>().text = string.Empty;
         }
 
+        OnResetQuestion += (bool testing) => {
+            Clear();
+            RandomPick();
+        };
         //Subscribe to get notify start the quiz
         Movement.OnStartQuiz += () =>
         {
@@ -64,12 +70,12 @@ public class OptionManager : MonoBehaviour
 
     private void Update()
     {
-        if (clear)
-        {
-            //Clear an option everytime reset or next question
-            Clear();
-            clear = false;
-        }
+        //if (clear)
+        //{
+        //    //Clear an option everytime reset or next question
+        //    Clear();
+        //    clear = false;
+        //}
     }
     private void RandomPick()
     {
@@ -78,7 +84,7 @@ public class OptionManager : MonoBehaviour
         TextMeshProUGUI text;
         text = button[index].GetComponentInChildren<TextMeshProUGUI>();
         text.text = scriptable_object[0].text;
-
+        print(text.text);
         //Store into the list
         itemDataList.Add(new itemData
         {
@@ -132,11 +138,13 @@ public class OptionManager : MonoBehaviour
         TextMeshProUGUI searchText = button[indexSlot].GetComponentInChildren<TextMeshProUGUI>();
 
         //Find the image contain inside list and return all of the data that related to
-        var result = itemDataList.Where(d => d.text == searchText.text);
+        var result = itemDataList.Where(d => d.text == searchText.text).ToList(); // Create a copy
         foreach (var data in result)
         {
             if (data.id == generateQuestion.questionID)
             {
+                //Disable the quiz after click the answer
+                OnEndQuiz?.Invoke();
                 OnNextQuestion?.Invoke(true);
                 clear = true;
             }
@@ -147,6 +155,7 @@ public class OptionManager : MonoBehaviour
             }
         }
     }
+
 
     private void Clear()
     {
