@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -12,13 +13,20 @@ public class SpawnerManager : MonoBehaviour
     private bool enableSpawn;
 
     [SerializeField] private float spawnTime;
+
+    private bool stopSpawn;
     private void OnEnable()
     {
         StartCoroutine(Spawn());
+        OptionManager.OnEndQuiz += () =>
+        {
+            stopSpawn = true;
+        };
     }
+    
     private IEnumerator Spawn()
     {
-        while (true)
+        while (!stopSpawn)
         {
             GameObject carLeft = Instantiate(this.car);
             carLeft.transform.position = transforms[0].position;

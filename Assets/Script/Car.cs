@@ -5,7 +5,13 @@ using UnityEngine;
 public class Car : MonoBehaviour
 {
     [SerializeField] private float speed;
-
+    private void OnEnable()
+    {
+        OptionManager.OnEndQuiz += () =>
+        {
+            speed = 0;
+        };
+    }
     // Update is called once per frame
     void Update()
     {

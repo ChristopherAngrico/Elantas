@@ -68,15 +68,6 @@ public class OptionManager : MonoBehaviour
     }
 
 
-    private void Update()
-    {
-        //if (clear)
-        //{
-        //    //Clear an option everytime reset or next question
-        //    Clear();
-        //    clear = false;
-        //}
-    }
     private void RandomPick()
     {
         //Spawn the correct text in option panel randomly
