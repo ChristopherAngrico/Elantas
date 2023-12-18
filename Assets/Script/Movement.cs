@@ -5,23 +5,34 @@ using UnityEngine;
 public class Movement : MonoBehaviour
 {
 
-    private AIPath iPath;
+    Vector3 moveDirection;
+    private bool canMove = true;
 
     public delegate void StartQuiz();
     public static event StartQuiz OnStartQuiz;
 
+
     private void OnEnable()
     {
-        iPath = GetComponent<AIPath>();
-        OptionManager.OnNextQuestion += (bool canMove) => {
-            iPath.canMove = canMove;
+        OptionManager.OnNextQuestion += (bool canMove) =>
+        {
+            this.canMove = canMove;
         };
     }
+
+    void Update()
+    {
+        if (canMove)
+        {
+            moveDirection = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+            transform.position += moveDirection * 2f * Time.deltaTime;
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         OnStartQuiz?.Invoke();
-        iPath.canMove = false;
+        canMove = false;
         Destroy(collision);
     }
-
 }
