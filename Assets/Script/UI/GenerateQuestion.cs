@@ -20,9 +20,12 @@ public class GenerateQuestion : MonoBehaviour
 
         Random.InitState(System.DateTime.Now.Millisecond);
 
-        //Subscribe to get notify start the quiz
+        //Subscribe to start quiz
         Movement.OnStartQuiz += () =>
         {
+            RandomPick();
+        };
+        OptionManager.OnResetQuestion += (bool testing) => {
             RandomPick();
         };
     }

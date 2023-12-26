@@ -1,17 +1,22 @@
 using TMPro;
 using UnityEngine;
 
-public class TimeUI : MonoBehaviour
+public class CountDownManager : MonoBehaviour
 {
     [SerializeField] private float countDownInit;
     private float countDown;
-    [SerializeField] private TextMeshProUGUI text;
-    [SerializeField] private Animator animator;
-    [SerializeField] private bool triggerCountdown;
+    private TextMeshProUGUI text;
+    private Animator animator;
+    private bool triggerCountdown;
     private void OnEnable()
     {
+
+        text = GetComponent<TextMeshProUGUI>();
+        animator = GetComponent<Animator>();
+
         triggerCountdown = true;
         countDown = countDownInit;
+
         OptionManager.OnEndQuiz += () =>
         {
             triggerCountdown = true;
@@ -19,6 +24,7 @@ public class TimeUI : MonoBehaviour
             animator.enabled = true;
             text.enabled = true;
         };
+
         Movement.OnStartQuiz += () =>
         {
             triggerCountdown = false;
@@ -29,18 +35,20 @@ public class TimeUI : MonoBehaviour
 
     private void Update()
     {
+        
         if (!triggerCountdown)
         {
+            //Reset countDown
             countDown = countDownInit;
         }
         else
         {
+            //timer count down
             animator.speed = 1;
             countDown -= Time.deltaTime;
             int current = Mathf.FloorToInt(countDown);
             if (countDown < 0) return;
             text.text = current.ToString();
-            print(current);
         }
     }
 }

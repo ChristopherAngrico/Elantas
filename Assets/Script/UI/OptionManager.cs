@@ -19,8 +19,6 @@ public class OptionManager : MonoBehaviour
     private Button option3;
     private Button option4;
 
-    [HideInInspector] public bool clear;
-
     private GenerateQuestion generateQuestion;
 
     public delegate void Answer(bool ans);
@@ -75,7 +73,6 @@ public class OptionManager : MonoBehaviour
         TextMeshProUGUI text;
         text = button[index].GetComponentInChildren<TextMeshProUGUI>();
         text.text = scriptable_object[0].text;
-        print(text.text);
         //Store into the list
         itemDataList.Add(new itemData
         {
@@ -137,12 +134,10 @@ public class OptionManager : MonoBehaviour
                 //Disable the quiz after click the answer
                 OnEndQuiz?.Invoke();
                 OnNextQuestion?.Invoke(true);
-                clear = true;
             }
             else
             {
                 OnResetQuestion?.Invoke(false);
-                clear = true;
             }
         }
     }

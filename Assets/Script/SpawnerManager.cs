@@ -18,12 +18,12 @@ public class SpawnerManager : MonoBehaviour
     private void OnEnable()
     {
         StartCoroutine(Spawn());
-        OptionManager.OnEndQuiz += () =>
+        TrafficLight.OnStopVehicle += () =>
         {
             stopSpawn = true;
         };
     }
-    
+
     private IEnumerator Spawn()
     {
         while (!stopSpawn)
