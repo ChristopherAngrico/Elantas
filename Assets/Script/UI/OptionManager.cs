@@ -55,7 +55,6 @@ public class OptionManager : MonoBehaviour
         }
 
         OnResetQuestion += (bool testing) => {
-            Clear();
             RandomPick();
         };
         //Subscribe to get notify start the quiz
@@ -68,23 +67,25 @@ public class OptionManager : MonoBehaviour
 
     private void RandomPick()
     {
-        //Spawn the correct text in option panel randomly
-        int index = Random.Range(0, button.Length);
+        //Clear itemDataList
+        Clear();
+
+        ////Spawn the correct text in option panel randomly
+        //int index = Random.Range(0, button.Length);
         TextMeshProUGUI text;
-        text = button[index].GetComponentInChildren<TextMeshProUGUI>();
-        text.text = scriptable_object[0].text;
-        //Store into the list
-        itemDataList.Add(new itemData
-        {
-            text = text.text,
-            id = scriptable_object[0].id
-        });
-       
-        //Fill the rest with random pick item
+        //text = button[index].GetComponentInChildren<TextMeshProUGUI>();
+        //text.text = scriptable_object[0].text;
+        ////Store into the list
+        //itemDataList.Add(new itemData
+        //{
+        //    text = text.text,
+        //    id = scriptable_object[0].id
+        //});
+
+        //Fill the rest with random wrong answer
         int i = 0;
         while (true)
         {
-            text = null;
             if (i == button.Length)
             {
                 break;

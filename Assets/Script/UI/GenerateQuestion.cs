@@ -25,16 +25,26 @@ public class GenerateQuestion : MonoBehaviour
         {
             RandomPick();
         };
-        OptionManager.OnResetQuestion += (bool testing) => {
+        OptionManager.OnResetQuestion += (bool testing) =>
+        {
             RandomPick();
         };
     }
 
     private void RandomPick()
     {
+
+        if (QuestionList.Count == questionScriptableObject.Length)
+        {
+            // All questions have been picked
+            // Handle this situation, for example by resetting the QuestionList
+            QuestionList.Clear();
+        }
+
         while (true)
         {
-            getRandom = Random.Range(0, questionScriptableObject.Length);
+            int tempRandom = Random.Range(0, questionScriptableObject.Length);
+            getRandom = tempRandom;
             if (!QuestionList.Contains(getRandom))
             {
                 break;

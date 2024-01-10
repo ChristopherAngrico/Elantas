@@ -13,18 +13,15 @@ public class HealthManager : MonoBehaviour
         health = image.Count - 1;
         OptionManager.OnResetQuestion += (bool ans) =>
         {
-            if (health < 0) return;
-
-            image[health].sprite = emptyHeart;
-            health -= 1;
+            if(health >= 0)
+            {
+                image[health].sprite = emptyHeart;
+                health -= 1;
+            }
+            if(health < 0)
+            {
+                print("Death");
+            }
         };
-        //Movement.OnStartQuiz += () =>
-        //{
-        //    health = image.Count - 1;
-        //    foreach (Image image in image)
-        //    {
-        //        image.sprite = fullHeart;
-        //    }
-        //};
     }
 }
