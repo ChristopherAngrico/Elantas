@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 34885126964744861}
   m_Layer: 0
   m_Name: CarBase
-  m_TagString: Untagged
+  m_TagString: Car
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -142,5 +142,5 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 3.2422316, y: 4.8}
+  m_Size: {x: 3.88, y: 4.8}
   m_EdgeRadius: 0

@@ -12,11 +12,11 @@ public class QuizManager : MonoBehaviour
 
     public delegate void Quiz();
     public static event Quiz OnStartQuiz;
-    private void Update()
+
+    private void Update() 
     {
         if (quiz.activeSelf == true)
         {
-            print("Testing");
             OnStartQuiz?.Invoke();
         }
         if (correctAnswer || wrongAnswer)

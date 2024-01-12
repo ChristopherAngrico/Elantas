@@ -21,14 +21,25 @@ public class GenerateQuestion : MonoBehaviour
         Random.InitState(System.DateTime.Now.Millisecond);
 
         //Subscribe to start quiz
-        Movement.OnStartQuiz += () =>
-        {
-            RandomPick();
-        };
-        OptionManager.OnResetQuestion += (bool testing) =>
-        {
-            RandomPick();
-        };
+        CountDownManager.OnStartQuiz += StartAQuiz;
+        OptionManager.OnResetQuiz += ResetAQuiz;
+        DialogueManager.OnGameStart += StartAQuiz;
+    }
+
+    private void StartAQuiz()
+    {
+        RandomPick();
+    }
+
+    private void ResetAQuiz(bool n)
+    {
+        RandomPick();
+    }
+
+    private void OnDisable()
+    {
+        CountDownManager.OnStartQuiz -= StartAQuiz;
+        OptionManager.OnResetQuiz -= ResetAQuiz;
     }
 
     private void RandomPick()

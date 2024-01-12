@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using TMPro;
-using System.Reflection;
 
 public class OptionManager : MonoBehaviour
 {
@@ -22,10 +21,10 @@ public class OptionManager : MonoBehaviour
     private GenerateQuestion generateQuestion;
 
     public delegate void Answer(bool ans);
-    public delegate void EndQuiz();
+    public delegate void EndQuiz(int value);
 
-    public static event Answer OnNextQuestion;
-    public static event Answer OnResetQuestion;
+    public static event Answer OnNextQuiz;
+    public static event Answer OnResetQuiz;
     public static event EndQuiz OnEndQuiz;
 
     private struct itemData
@@ -54,33 +53,37 @@ public class OptionManager : MonoBehaviour
             button[i].GetComponentInChildren<TextMeshProUGUI>().text = string.Empty;
         }
 
-        OnResetQuestion += (bool testing) => {
-            RandomPick();
-        };
+        OnResetQuiz += ResetAQuiz;
+
         //Subscribe to get notify start the quiz
-        Movement.OnStartQuiz += () =>
-        {
-            RandomPick();
-        };
+        CountDownManager.OnStartQuiz += StartAQuiz;
+
+        DialogueManager.OnGameStart += StartAQuiz;
     }
 
+    private void StartAQuiz()
+    {
+        RandomPick();
+    }
+
+    private void ResetAQuiz(bool n)
+    {
+        RandomPick();
+    }
+
+    private void OnDisable()
+    {
+        OnResetQuiz -= ResetAQuiz;
+        CountDownManager.OnStartQuiz -= StartAQuiz;
+        DialogueManager.OnGameStart -= StartAQuiz;
+    }
 
     private void RandomPick()
     {
         //Clear itemDataList
         Clear();
-
-        ////Spawn the correct text in option panel randomly
-        //int index = Random.Range(0, button.Length);
+        
         TextMeshProUGUI text;
-        //text = button[index].GetComponentInChildren<TextMeshProUGUI>();
-        //text.text = scriptable_object[0].text;
-        ////Store into the list
-        //itemDataList.Add(new itemData
-        //{
-        //    text = text.text,
-        //    id = scriptable_object[0].id
-        //});
 
         //Fill the rest with random wrong answer
         int i = 0;
@@ -133,12 +136,12 @@ public class OptionManager : MonoBehaviour
             if (data.id == generateQuestion.questionID)
             {
                 //Disable the quiz after click the answer
-                OnEndQuiz?.Invoke();
-                OnNextQuestion?.Invoke(true);
+                OnEndQuiz?.Invoke(2);
+                OnNextQuiz?.Invoke(true);
             }
             else
             {
-                OnResetQuestion?.Invoke(false);
+                OnResetQuiz?.Invoke(false);
             }
         }
     }
@@ -152,5 +155,4 @@ public class OptionManager : MonoBehaviour
             item.GetComponentInChildren<TextMeshProUGUI>().text = string.Empty;
         }
     }
-
 }

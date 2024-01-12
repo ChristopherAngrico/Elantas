@@ -18,10 +18,12 @@ public class SpawnerManager : MonoBehaviour
     private void OnEnable()
     {
         StartCoroutine(Spawn());
-        TrafficLight.OnStopVehicle += () =>
-        {
-            stopSpawn = true;
-        };
+        TrafficLight.OnStopVehicle += StopSpawn;
+    }
+
+    private void StopSpawn()
+    {
+        stopSpawn = true;
     }
 
     private IEnumerator Spawn()

@@ -5,50 +5,81 @@ public class CountDownManager : MonoBehaviour
 {
     [SerializeField] private float countDownInit;
     private float countDown;
-    private TextMeshProUGUI text;
-    private Animator animator;
+
+    [SerializeField] private TextMeshProUGUI text;
+
     private bool triggerCountdown;
+    private bool startQuiz;
+
+    public delegate void Quiz();
+    public static event Quiz OnStartQuiz;
+
     private void OnEnable()
     {
+        text.text = string.Empty;
 
-        text = GetComponent<TextMeshProUGUI>();
-        animator = GetComponent<Animator>();
-
-        triggerCountdown = true;
         countDown = countDownInit;
 
-        OptionManager.OnEndQuiz += () =>
-        {
-            triggerCountdown = true;
-            animator.Play("Base Layer.TextAnimation", -1, 0f);
-            animator.enabled = true;
-            text.enabled = true;
-        };
+        OptionManager.OnEndQuiz += EndAQuiz;
 
-        Movement.OnStartQuiz += () =>
-        {
-            triggerCountdown = false;
-            animator.enabled = false;
-            text.enabled = true;
-        };
+        DialogueManager.OnGameStart += GameStart;
+
+        OnStartQuiz += StartAQuiz;
     }
 
-    private void Update()
+    private void GameStart()
     {
-        
+        text.text = "0";
+    }
+
+    private void StartAQuiz()
+    {
+        triggerCountdown = false;
+        text.enabled = true;
+        startQuiz = false;
+    }
+
+    private void EndAQuiz(int n)
+    {
+        triggerCountdown = true;
+        text.enabled = true;
+        countDown += 2;
+        startQuiz = true;
+    }
+
+    private void OnDisable()
+    {
+        OptionManager.OnEndQuiz -= EndAQuiz;
+
+        OnStartQuiz -= StartAQuiz;
+    }
+
+    private void FixedUpdate()
+    {
+
         if (!triggerCountdown)
         {
-            //Reset countDown
             countDown = countDownInit;
+            return;
         }
-        else
+
+        // Timer count down
+        countDown -= Time.deltaTime;
+        int current = Mathf.FloorToInt(countDown);
+        countDownInit = current + 1;
+        if (current < 0)
         {
-            //timer count down
-            animator.speed = 1;
-            countDown -= Time.deltaTime;
-            int current = Mathf.FloorToInt(countDown);
-            if (countDown < 0) return;
-            text.text = current.ToString();
+            countDownInit = 0;
+            return;
+        }
+
+        text.text = current.ToString();
+            
+        //Enable Quiz
+        if (current == 0 && startQuiz)
+        {
+            OnStartQuiz?.Invoke();
+            startQuiz = false;
         }
     }
 }
