@@ -4,34 +4,36 @@ using System.Collections.Generic;
 
 public class GenerateQuestion : MonoBehaviour
 {
+    OptionManager optionManager;
 
     [SerializeField] private QuestionScriptableObject[] questionScriptableObject;
 
     [SerializeField] private Image image;
 
     private List<int> QuestionList = new List<int>();
-    
+
     private int getRandom;
 
     [HideInInspector] public int questionID { get; private set; }
 
     private void OnEnable()
     {
+        optionManager = GetComponent<OptionManager>();
 
         Random.InitState(System.DateTime.Now.Millisecond);
 
         //Subscribe to start quiz
         CountDownManager.OnStartQuiz += StartAQuiz;
-        OptionManager.OnResetQuiz += ResetAQuiz;
         DialogueManager.OnGameStart += StartAQuiz;
+        optionManager.OnNextQuestion += NextQuestion;
     }
 
     private void StartAQuiz()
     {
         RandomPick();
     }
-
-    private void ResetAQuiz(bool n)
+    
+    private void NextQuestion()
     {
         RandomPick();
     }
@@ -39,7 +41,7 @@ public class GenerateQuestion : MonoBehaviour
     private void OnDisable()
     {
         CountDownManager.OnStartQuiz -= StartAQuiz;
-        OptionManager.OnResetQuiz -= ResetAQuiz;
+        DialogueManager.OnGameStart -= StartAQuiz;
     }
 
     private void RandomPick()
@@ -63,6 +65,6 @@ public class GenerateQuestion : MonoBehaviour
         }
         QuestionList.Add(getRandom);
         image.sprite = questionScriptableObject[getRandom].sprite;
-        questionID = questionScriptableObject[getRandom].id;
+        //questionID = questionScriptableObject[getRandom].id;
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class CountDownManager : MonoBehaviour
 {
-    [SerializeField] private float countDownInit;
+    private float countDownInit;
     private float countDown;
 
     [SerializeField] private TextMeshProUGUI text;
@@ -14,6 +14,9 @@ public class CountDownManager : MonoBehaviour
     public delegate void Quiz();
     public static event Quiz OnStartQuiz;
 
+    public delegate void ReduceHealth();
+    public static event ReduceHealth OnReduceHealth;
+
     private void OnEnable()
     {
         text.text = string.Empty;
@@ -21,6 +24,8 @@ public class CountDownManager : MonoBehaviour
         countDown = countDownInit;
 
         OptionManager.OnEndQuiz += EndAQuiz;
+
+        OptionManager.OnAnswer += Answer;
 
         DialogueManager.OnGameStart += GameStart;
 
@@ -39,11 +44,17 @@ public class CountDownManager : MonoBehaviour
         startQuiz = false;
     }
 
-    private void EndAQuiz(int n)
+    private void Answer(int value)
+    {
+        countDownInit += value;
+        countDown = countDownInit;
+        text.text = countDownInit.ToString();
+    }
+
+    private void EndAQuiz()
     {
         triggerCountdown = true;
         text.enabled = true;
-        countDown += 2;
         startQuiz = true;
     }
 
@@ -56,17 +67,12 @@ public class CountDownManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-
-        if (!triggerCountdown)
-        {
-            countDown = countDownInit;
-            return;
-        }
+        if (!triggerCountdown) return;
 
         // Timer count down
         countDown -= Time.deltaTime;
-        int current = Mathf.FloorToInt(countDown);
-        countDownInit = current + 1;
+        int current = Mathf.FloorToInt(countDown) + 1;
+        countDownInit = current;
         if (current < 0)
         {
             countDownInit = 0;
@@ -74,10 +80,11 @@ public class CountDownManager : MonoBehaviour
         }
 
         text.text = current.ToString();
-            
+
         //Enable Quiz
         if (current == 0 && startQuiz)
         {
+            OnReduceHealth?.Invoke();
             OnStartQuiz?.Invoke();
             startQuiz = false;
         }

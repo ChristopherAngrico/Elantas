@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using TMPro;
+using System.Collections;
 
 public class OptionManager : MonoBehaviour
 {
@@ -18,19 +19,22 @@ public class OptionManager : MonoBehaviour
     private Button option3;
     private Button option4;
 
+    [HideInInspector] public bool nextQuestion;
+
     private GenerateQuestion generateQuestion;
 
-    public delegate void Answer(bool ans);
-    public delegate void EndQuiz(int value);
+    public delegate void Answer(int value);
+    public delegate void NextQuiz();
+    public delegate void EndQuiz();
 
-    public static event Answer OnNextQuiz;
-    public static event Answer OnResetQuiz;
+    public static event Answer OnAnswer;
     public static event EndQuiz OnEndQuiz;
+    public event NextQuiz OnNextQuestion;
 
     private struct itemData
     {
         public string text;
-        public int id;
+        public bool ans;
     }
 
     private void OnEnable()
@@ -48,41 +52,45 @@ public class OptionManager : MonoBehaviour
         option4.onClick.AddListener(delegate { TaskOnClick(3); });
 
         //All text set to empty string
-        for(int i = 0; i < button.Length; i++)
+        for (int i = 0; i < button.Length; i++)
         {
             button[i].GetComponentInChildren<TextMeshProUGUI>().text = string.Empty;
         }
 
-        OnResetQuiz += ResetAQuiz;
+        RandomPick();
 
         //Subscribe to get notify start the quiz
-        CountDownManager.OnStartQuiz += StartAQuiz;
+        //CountDownManager.OnStartQuiz += StartAQuiz;
 
-        DialogueManager.OnGameStart += StartAQuiz;
+        //DialogueManager.OnGameStart += StartAQuiz;
+
+        //OnNextQuestion += NextQuestion;
     }
 
-    private void StartAQuiz()
-    {
-        RandomPick();
-    }
-
-    private void ResetAQuiz(bool n)
-    {
-        RandomPick();
-    }
+    //private void NextQuestion()
+    //{
+    //    if (loopQuestion == 3)
+    //    {
+    //        loopQuestion = 0;
+    //        OnEndQuiz?.Invoke();
+    //    }
+    //    else
+    //    {
+    //        loopQuestion++;
+    //        RandomPick();
+    //    }
+    //}
 
     private void OnDisable()
     {
-        OnResetQuiz -= ResetAQuiz;
-        CountDownManager.OnStartQuiz -= StartAQuiz;
-        DialogueManager.OnGameStart -= StartAQuiz;
+        //OnNextQuestion -= NextQuestion;
     }
 
     private void RandomPick()
     {
         //Clear itemDataList
         Clear();
-        
+
         TextMeshProUGUI text;
 
         //Fill the rest with random wrong answer
@@ -119,7 +127,7 @@ public class OptionManager : MonoBehaviour
             itemDataList.Add(new itemData
             {
                 text = getText,
-                id = scriptable_object[randomIndex].id
+                ans = scriptable_object[randomIndex].ans
             });
             i++;
         }
@@ -131,21 +139,41 @@ public class OptionManager : MonoBehaviour
 
         //Find the image contain inside list and return all of the data that related to
         var result = itemDataList.Where(d => d.text == searchText.text).ToList(); // Create a copy
-        foreach (var data in result)
-        {
-            if (data.id == generateQuestion.questionID)
-            {
-                //Disable the quiz after click the answer
-                OnEndQuiz?.Invoke(2);
-                OnNextQuiz?.Invoke(true);
-            }
-            else
-            {
-                OnResetQuiz?.Invoke(false);
-            }
-        }
+        //foreach (var data in result)
+        //{
+        //    if (data.id == generateQuestion.questionID)
+        //    {
+        //        StartCoroutine(Delay(2, indexSlot, true));
+        //    }
+        //    else
+        //    {
+        //        StartCoroutine(Delay(0, indexSlot, false));
+        //    }
+        //}
     }
 
+    IEnumerator Delay(int value, int indexSlot, bool determineAnswer)
+    {
+        if (determineAnswer)
+        {
+            button[indexSlot].GetComponent<Image>().color = Color.green;
+
+        }
+        else
+        {
+            button[indexSlot].GetComponent<Image>().color = Color.red;
+        }
+
+        yield return new WaitForSeconds(1f);
+
+        for (int i = 0; i < button.Length; i++)
+        {
+            button[i].GetComponent<Image>().color = Color.white;
+        }
+
+        OnAnswer?.Invoke(value);
+        OnNextQuestion?.Invoke();
+    }
 
     private void Clear()
     {

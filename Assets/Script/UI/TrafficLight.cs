@@ -22,6 +22,8 @@ public class TrafficLight : MonoBehaviour
     private void OnDisable()
     {
         DialogueManager.OnGameStart -= GameStart;
+        CountDownManager.OnStartQuiz -= OnQuiz;
+        OptionManager.OnEndQuiz -= OnEndQuiz;
     }
 
     public void GameStart()
@@ -34,7 +36,7 @@ public class TrafficLight : MonoBehaviour
         button.enabled = false;
     }
 
-    private void OnEndQuiz(int n)
+    private void OnEndQuiz()
     {
         button.enabled = true;
     }

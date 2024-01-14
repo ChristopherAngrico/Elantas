@@ -16,7 +16,7 @@ public class Movement : MonoBehaviour
 
     private void OnEnable()
     {
-        OptionManager.OnNextQuiz += NextQuiz;
+        OptionManager.OnEndQuiz += OnEndQuiz;
 
         CountDownManager.OnStartQuiz += StartAQuiz;
 
@@ -33,14 +33,14 @@ public class Movement : MonoBehaviour
         canMove = false;
     }
 
-    private void NextQuiz(bool n)
+    private void OnEndQuiz()
     {
-        canMove = n;
+        canMove = true;
     }
+
 
     private void OnDisable()
     {
-        OptionManager.OnNextQuiz -= NextQuiz;
 
         CountDownManager.OnStartQuiz -= StartAQuiz;
 
@@ -52,7 +52,7 @@ public class Movement : MonoBehaviour
         if (canMove)
         {
             moveDirection = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-            transform.position += moveDirection * 2f * Time.deltaTime;
+            transform.position += moveDirection * 3f * Time.deltaTime;
         }
     }
 

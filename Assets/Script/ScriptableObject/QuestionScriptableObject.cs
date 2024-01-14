@@ -4,5 +4,4 @@ using UnityEngine;
 public class QuestionScriptableObject : ScriptableObject
 {
     public Sprite sprite;
-    public int id;
 }

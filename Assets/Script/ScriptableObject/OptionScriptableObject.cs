@@ -5,5 +5,5 @@ using UnityEngine;
 public class OptioncriptableObject : ScriptableObject
 {
     public string text;
-    public int id;
+    public bool ans;
 }

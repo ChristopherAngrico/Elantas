@@ -15,10 +15,10 @@ public class HealthManager : MonoBehaviour
     private void OnEnable()
     {
         health = image.Count - 1;
-        OptionManager.OnResetQuiz += ResetAQuiz;
+        CountDownManager.OnReduceHealth += ReduceHealth;
     }
 
-    private void ResetAQuiz(bool n)
+    private void ReduceHealth()
     {
         if (health >= 0)
         {
@@ -33,6 +33,6 @@ public class HealthManager : MonoBehaviour
 
     private void OnDisable()
     {
-        OptionManager.OnResetQuiz -= ResetAQuiz;
+        CountDownManager.OnReduceHealth -= ReduceHealth;
     }
 }
