@@ -10,6 +10,6 @@ public class LoseUI : MonoBehaviour
 
     public void Keluar()
     {
-        Application.Quit();
+        SceneManager.LoadScene(0);
     }
 }

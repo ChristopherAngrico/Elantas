@@ -27,7 +27,7 @@ public class DialogueManager : MonoBehaviour
     public static event GameEvent OnGameStart;
     public static event GameEvent OnGameEnd;
 
-    private float characterPerSecond = 0.05f;
+    [SerializeField] private float characterPerSecond = 0.05f;
 
     private void OnEnable()
     {

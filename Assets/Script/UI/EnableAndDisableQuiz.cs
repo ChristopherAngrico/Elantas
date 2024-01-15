@@ -4,28 +4,46 @@ using UnityEngine;
 public class EnableAndDisableQuiz : MonoBehaviour
 {
     [SerializeField] private GameObject[] quiz;
+    private int nextQuiz;
 
-    public delegate void QuizEvent();
+    public delegate void EndQuizEvent();
+    public static event EndQuizEvent OnEndQuiz;
 
     private void OnEnable()
     {
-        //OptionManager.OnEndQuiz += EndAQuiz;
+        OnEndQuiz += EndAQuiz;
         CountDownManager.OnStartQuiz += StartAQuiz;
         DialogueManager.OnGameStart += GameStart;
+        OptionManager.OnNextQuestion += NextQuestion;
         //HealthManager.OnFail += Fail;
     }
 
     private void OnDisable()
     {
-        //OptionManager.OnEndQuiz -= EndAQuiz;
+        OnEndQuiz -= EndAQuiz;
         CountDownManager.OnStartQuiz -= StartAQuiz;
         DialogueManager.OnGameStart -= GameStart;
+        OptionManager.OnNextQuestion -= NextQuestion;
     }
 
-    //private void EndAQuiz()
-    //{
-    //    quiz.SetActive(false);
-    //}
+    private void EndAQuiz()
+    {
+        quiz[nextQuiz].SetActive(false);
+    }
+
+    private void NextQuestion()
+    {
+        if (nextQuiz < quiz.Length)
+        {
+            quiz[nextQuiz].SetActive(false);
+            nextQuiz++;
+            quiz[nextQuiz].SetActive(true);
+        }
+        else
+        {
+            OnEndQuiz?.Invoke();
+        }
+    }
 
     //private void Fail()
     //{
@@ -34,12 +52,12 @@ public class EnableAndDisableQuiz : MonoBehaviour
 
     private void StartAQuiz()
     {
-        quiz[0].SetActive(true);
+        quiz[nextQuiz].SetActive(true);
     }
 
     private void GameStart()
     {
-        quiz[0].SetActive(true);
+        quiz[nextQuiz].SetActive(true);
     }
 
 }

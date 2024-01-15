@@ -6,7 +6,6 @@ public class HealthManager : MonoBehaviour
 {
     private int health;
     [SerializeField] private List<Image> image;
-    [SerializeField] private Sprite fullHeart;
     [SerializeField] private Sprite emptyHeart;
 
     public delegate void Fail();

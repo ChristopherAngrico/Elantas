@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class CountDownManager : MonoBehaviour
 {
-    private float countDownInit;
+    [SerializeField] private float countDownInit;
     private float countDown;
 
     [SerializeField] private TextMeshProUGUI text;
@@ -23,7 +23,7 @@ public class CountDownManager : MonoBehaviour
 
         countDown = countDownInit;
 
-        OptionManager.OnEndQuiz += EndAQuiz;
+        EnableAndDisableQuiz.OnEndQuiz += EndAQuiz;
 
         OptionManager.OnAnswer += Answer;
 
@@ -60,7 +60,7 @@ public class CountDownManager : MonoBehaviour
 
     private void OnDisable()
     {
-        OptionManager.OnEndQuiz -= EndAQuiz;
+        EnableAndDisableQuiz.OnEndQuiz -= EndAQuiz;
 
         OnStartQuiz -= StartAQuiz;
     }

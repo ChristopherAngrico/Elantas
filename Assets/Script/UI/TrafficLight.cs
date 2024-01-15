@@ -16,14 +16,14 @@ public class TrafficLight : MonoBehaviour
 
         DialogueManager.OnGameStart += GameStart;
         CountDownManager.OnStartQuiz += OnQuiz;
-        OptionManager.OnEndQuiz += OnEndQuiz;
+        EnableAndDisableQuiz.OnEndQuiz += OnEndQuiz;
     }
 
     private void OnDisable()
     {
         DialogueManager.OnGameStart -= GameStart;
         CountDownManager.OnStartQuiz -= OnQuiz;
-        OptionManager.OnEndQuiz -= OnEndQuiz;
+        EnableAndDisableQuiz.OnEndQuiz -= OnEndQuiz;
     }
 
     public void GameStart()

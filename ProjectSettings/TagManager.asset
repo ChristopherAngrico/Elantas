@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Question
   - Car
+  - Die
   layers:
   - Default
   - TransparentFX
