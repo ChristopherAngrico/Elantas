@@ -8666,7 +8666,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e46c6ee43e74021429e3f634658362e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PauseUI: {fileID: 0}
+  PauseUI: {fileID: 31556309}
 --- !u!4 &992702265
 Transform:
   m_ObjectHideFlags: 0
@@ -10590,7 +10590,6 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 31556310}
   - {fileID: 1812898996}
   - {fileID: 849663920}
   - {fileID: 1717403713}
@@ -10611,6 +10610,7 @@ RectTransform:
   - {fileID: 292383283}
   - {fileID: 2086354222}
   - {fileID: 1061562033}
+  - {fileID: 31556310}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}

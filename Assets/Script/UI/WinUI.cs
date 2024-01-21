@@ -1,7 +1,5 @@
 using UnityEngine.SceneManagement;
 using UnityEngine;
-using UnityEditor.SearchService;
-using Unity.VisualScripting;
 
 public class WinUI : MonoBehaviour
 {

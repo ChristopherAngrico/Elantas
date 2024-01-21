@@ -33,11 +33,12 @@ public class EnableAndDisableQuiz : MonoBehaviour
 
     private void NextQuestion()
     {
-        if (nextQuiz < quiz.Length)
+        if (nextQuiz < quiz.Length - 1)
         {
             quiz[nextQuiz].SetActive(false);
             nextQuiz++;
             quiz[nextQuiz].SetActive(true);
+            print(nextQuiz);
         }
         else
         {
@@ -52,11 +53,13 @@ public class EnableAndDisableQuiz : MonoBehaviour
 
     private void StartAQuiz()
     {
+        nextQuiz = 0;
         quiz[nextQuiz].SetActive(true);
     }
 
     private void GameStart()
     {
+        nextQuiz = 0;
         quiz[nextQuiz].SetActive(true);
     }
 
